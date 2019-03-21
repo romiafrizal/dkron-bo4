@@ -2,10 +2,10 @@
 
 runing with 1 server and 3 agents stanby:
 ```
-sudo docker-compose up -d --scale dkron-agent=3
+docker-compose up -d --scale dkron-agent=3
 ```
 
-### ROLE variabel:
+### Role variabel:
 - server
 - agent
 
