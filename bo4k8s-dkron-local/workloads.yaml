@@ -15,22 +15,12 @@ spec:
       containers:
       - name: consul
         image: consul
+        volumeMounts:
+          - name: consul-data
+            mountPath: /consul/data
+      volumes:
+        - name: consul-data
+          hostPath:
+            path: /consul/data
+            type: DirectoryOrCreate
 
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: dkron
-spec:
-  selector:
-    matchLabels:
-      app: dkron
-  replicas: 1
-  template: # template for the pods
-    metadata:
-      labels:
-        app: dkron
-    spec:
-      containers:
-      - name: dkron
-        image: dkron/dkron
