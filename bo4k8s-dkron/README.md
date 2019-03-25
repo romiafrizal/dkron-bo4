@@ -1,1 +1,0 @@
-# Manual kubernetes dkron-bo4
