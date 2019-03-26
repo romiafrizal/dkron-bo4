@@ -15,6 +15,12 @@ spec:
       containers:
       - name: consul
         image: consul
+        args:
+          - agent
+          - -server
+          - -bootstrap
+          - -client=0.0.0.0
+
         volumeMounts:
           - name: consul-data
             mountPath: /consul/data
@@ -23,4 +29,31 @@ spec:
           hostPath:
             path: /consul/data
             type: DirectoryOrCreate
-
+        
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dkron
+spec:
+  selector:
+    matchLabels:
+      app: dkron
+  replicas: 1
+  template: # template for the pods
+    metadata:
+      labels:
+        app: dkron
+    spec:
+      containers:
+      - name: dkron
+        image: dkron/dkron
+        args:
+          - "agent"
+          - "--server"
+          - "--backend=consul" 
+          - "--backend-machine=consul:8500" 
+          - "--join=dkron:8946" 
+          - "--node-name=server" 
+          - "--tag" 
+          - "role=server"
