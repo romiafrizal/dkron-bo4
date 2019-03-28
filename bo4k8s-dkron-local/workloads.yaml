@@ -25,9 +25,9 @@ spec:
             mountPath: /consul/data
       volumes:
         - name: consul-data
-          hostPath:
-            path: /consul/data
-            type: DirectoryOrCreate
+          # Pointer to storage.yml implement persistentVolumeClain (pvc)
+          persistentVolumeClaim:
+            claimName: consul-pvc
         
 ---
 apiVersion: apps/v1
