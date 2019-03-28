@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: consul
+spec:
+  selector:
+    matchLabels:
+      app: consul
+  replicas: 1
+  template: # template for the pods
+    metadata:
+      labels:
+        app: consul
+    spec:
+      containers:
+      - name: consul
+        image: consul
+        args:
+          - agent
+          - -server
+          - -bootstrap
+          - -client=0.0.0.0
+        volumeMounts:
+          - name: consul-data
+            mountPath: /consul/data
+      volumes:
+        - name: consul-data
+          # Pointer to storage.yml implement persistentVolumeClain (pvc)
+          persistentVolumeClaim:
+            claimName: consul-pvc
+        
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dkron
+spec:
+  selector:
+    matchLabels:
+      app: dkron
+  replicas: 2
+  template: # template for the pods
+    metadata:
+      labels:
+        app: dkron
+    spec:
+      containers:
+      - name: dkron
+        image: dkron/dkron
+        args:
+          - "agent"
+          - "--server"
+          - "--backend=consul" 
+          - "--backend-machine=consul:8500" 
+          - "--join=dkron:8946"
+          - "--tag" 
+          - "role=server"
+
+---
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dkron-agent
+spec:
+  selector:
+    matchLabels:
+      app: dkron-agent
+  replicas: 2
+  template: # template for the pods
+    metadata:
+      labels:
+        app: dkron-agent
+    spec:
+      containers:
+      - name: dkron-agent
+        image: dkron/dkron
+        args:
+          - "agent"
+          - "--backend=consul" 
+          - "--backend-machine=consul:8500" 
+          - "--join=dkron:8946" 
+          - "--tag" 
+          - "role=agent"
