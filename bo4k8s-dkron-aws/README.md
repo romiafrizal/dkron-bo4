@@ -4,7 +4,7 @@
 ``` https://github.com/kubernetes/kops/blob/master/docs/aws.md ```
 
 #### Create Cluster
-create sss (ask romi ya):
+- Create s3 private:
 ```
 dkron-kops-state-storage-bo4-com
 dkron-kops-state-storage-bo4-xyz
@@ -58,12 +58,27 @@ kops update cluster ${NAME} --yes
 kops validate cluster
 ```
 ## KUBECTL
-- check kubernees service
+- Check kubernetes service
 ```
 kubectl get all
 ```
-- 
-
+- Apply and running container service pods
+```
+kubectl apply -f <name-of-pod>.yml 
+kubectl apply -f . 
+```
+- Delete pods
+```
+kubectl delete pods/<name-of-pods>
+```
+- Delete service 
+``` 
+kubectl delete service/<nameofservice>
+```
+- Delete replicaset 
+``` 
+kubectl delete replicaset/<nameofservice>
+```
 
 #### STOP Bootstrap instance
 after bootstrap instance stop, data "export" is gone. to get it back:
